@@ -250,7 +250,7 @@ with st.sidebar:
 
     item_name = st.text_input("Item Name", value="Jollof Rice")
     business_type = st.selectbox("Business Type", ["Restaurant", "Cafe", "Bakery"])
-    price = st.number_input("Price (₦)", min_value=1.0, value=50.0, step=5.0)
+    price = st.number_input("Price (GHS)", min_value=1.0, value=50.0, step=5.0)
     shelf_life = st.number_input("Shelf Life (hours)", min_value=0.1, value=4.0, step=0.5)
 
     st.markdown("---")
@@ -440,9 +440,9 @@ else:
     else:
         st.warning("Could not load 7-day forecast.")
 
-    # ── FOOTER ────────────────────────────────────────────────────────────────
-    st.markdown("---")
+    # -------FOOTER -------------------------------------------------------------
+    st.markdoen("---")
     st.markdown(
-        '<p style="color:#334155; font-size:0.75rem; text-align:center">PrepPal AI · Built by Euodia Sam · Data Science Lead</p>',
+        '<p style="color=#334255; font-size:0.75rem, text-align:center">PrepPal AI · Built by Euodia Sam · Data Science Lead</p>',
         unsafe_allow_html=True
     )
