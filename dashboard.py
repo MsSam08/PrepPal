@@ -441,8 +441,8 @@ else:
         st.warning("Could not load 7-day forecast.")
 
     # -------FOOTER -------------------------------------------------------------
-    st.markdoen("---")
+    st.markdown("---")
     st.markdown(
-        '<p style="color=#334255; font-size:0.75rem, text-align:center">PrepPal AI · Built by Euodia Sam · Data Science Lead</p>',
+        '<p style="color:#334155; font-size:0.75rem; text-align:center">PrepPal AI · Built by Euodia Sam · Data Science Lead</p>',
         unsafe_allow_html=True
     )
