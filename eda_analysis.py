@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 
-# ── 1. LOAD DATASETS ─────────────────────────────────────────────────────────
+# ---- 1. LOAD DATASETS ---------------------------------
 
 restaurant_df  = pd.read_csv('restaurant_sales_dataset.csv')
 cafe_bakery_df = pd.read_csv('cafe_bakery_sales_dataset.csv')
@@ -30,7 +30,7 @@ print("\n", all_data.describe())
 print("\nBusiness types:\n", all_data['business_type'].value_counts())
 print("\nItems per business:\n", all_data.groupby('business_type')['item_name'].nunique())
 
-# ── 2. DATA QUALITY CHECKS ───────────────────────────────────────────────────
+# ------ 2. DATA QUALITY CHECKS ----------------------------------------
 
 print("\n" + "=" * 80)
 print("DATA QUALITY CHECKS")
@@ -45,7 +45,7 @@ date_range    = pd.date_range(all_data['date'].min(), all_data['date'].max())
 missing_dates = set(date_range) - set(all_data['date'].unique())
 print(f"Missing dates:               {len(missing_dates)}")
 
-# ── 3. DISTRIBUTION PLOTS ────────────────────────────────────────────────────
+# ------ 3. DISTRIBUTION PLOTS -------------------------------------
 
 fig, axes = plt.subplots(3, 3, figsize=(20, 15))
 for idx, biz in enumerate(['Restaurant', 'Cafe', 'Bakery']):
@@ -66,7 +66,7 @@ plt.tight_layout()
 plt.savefig('eda_distributions.png', dpi=300)
 print("\n✓ Saved: eda_distributions.png")
 
-# ── 4. PATTERN ANALYSIS ──────────────────────────────────────────────────────
+# ----- 4. PATTERN ANALYSIS ----------------------------------------
 
 print("\n" + "=" * 80)
 print("WEATHER IMPACT")
@@ -92,7 +92,7 @@ print("=" * 80)
 print(all_data.groupby(['business_type','is_weekend']).agg(
     mean_demand=('customer_demand','mean')).round(2))
 
-# ── 5. TIME SERIES ───────────────────────────────────────────────────────────
+# ---- 5. TIME SERIES ----------------------------------------------
 
 fig, axes = plt.subplots(3, 1, figsize=(15, 12))
 for idx, biz in enumerate(['Restaurant', 'Cafe', 'Bakery']):
@@ -105,7 +105,7 @@ plt.tight_layout()
 plt.savefig('demand_timeseries.png', dpi=300)
 print("✓ Saved: demand_timeseries.png")
 
-# ── 6. CORRELATION MATRIX ────────────────────────────────────────────────────
+# ---- 6. CORRELATION MATRIX ---------------------------------------
 
 numeric_cols = ['price','shelf_life_hours','quantity_available',
                 'quantity_sold','customer_demand','waste_quantity']
@@ -117,7 +117,7 @@ plt.tight_layout()
 plt.savefig('correlation_matrix.png', dpi=300)
 print("✓ Saved: correlation_matrix.png")
 
-# ── 7. ITEM STATS ────────────────────────────────────────────────────────────
+# ---- 7. ITEM STATS ------------------------------------------
 
 print("\n" + "=" * 80)
 print("AVERAGE WASTE % BY ITEM")

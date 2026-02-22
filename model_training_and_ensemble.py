@@ -14,13 +14,13 @@ from xgboost import XGBRegressor
 
 DATA_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# ── LOAD ─────────────────────────────────────────────────────────────────────
+# ---- LOAD -----------------------------------------
 print("Loading processed data...")
 df = pd.read_csv(os.path.join(DATA_DIR, 'processed_data_with_features_v3.csv'))
 df['date'] = pd.to_datetime(df['date'])
 print(f"Shape: {df.shape}")
 
-# ── FEATURES (34) ─────────────────────────────────────────────────────────────
+# ----- FEATURES (34) -----------------------------------------
 FEATURE_COLS = [
     'day_of_week', 'month', 'week_of_year', 'day_of_month',
     'is_weekend', 'is_monday', 'is_friday', 'is_saturday', 'is_sunday',
@@ -38,7 +38,7 @@ FEATURE_COLS = [
 X = df[FEATURE_COLS]
 y = df['customer_demand']
 
-# ── TRAIN / TEST SPLIT (last 30 days = test) ─────────────────────────────────
+# ---- TRAIN / TEST SPLIT (last 30 days = test) -----------------------------------------
 cutoff     = df['date'].max() - pd.Timedelta(days=30)
 train_mask = df['date'] <= cutoff
 test_mask  = df['date'] >  cutoff
@@ -47,7 +47,7 @@ X_train, y_train = X[train_mask], y[train_mask]
 X_test,  y_test  = X[test_mask],  y[test_mask]
 print(f"Train: {len(X_train)} rows | Test: {len(X_test)} rows")
 
-# ── MODELS ───────────────────────────────────────────────────────────────────
+# ---- MODELS -----------------------------------------
 models = {
     'Ridge': Ridge(alpha=1.0),
     'RandomForest': RandomForestRegressor(
@@ -66,26 +66,26 @@ models = {
 }
 
 print("\nTraining models...")
-results        = {}
+results = {}
 trained_models = {}
 
 for name, model in models.items():
-    print(f"  Training {name}...")
+    print(f"Training {name}...")
     model.fit(X_train, y_train)
     trained_models[name] = model
     ytr = model.predict(X_train)
     yte = model.predict(X_test)
     results[name] = {
         'train_mape': mean_absolute_percentage_error(y_train, ytr) * 100,
-        'test_mape':  mean_absolute_percentage_error(y_test,  yte) * 100,
-        'test_mae':   mean_absolute_error(y_test, yte),
-        'test_r2':    r2_score(y_test, yte),
+        'test_mape': mean_absolute_percentage_error(y_test,  yte) * 100,
+        'test_mae': mean_absolute_error(y_test, yte),
+        'test_r2': r2_score(y_test, yte),
     }
-    print(f"    Train MAPE: {results[name]['train_mape']:.2f}%  "
-          f"Test MAPE: {results[name]['test_mape']:.2f}%  "
-          f"R²: {results[name]['test_r2']:.3f}")
+    print(f"Train MAPE: {results[name]['train_mape']:.2f}%"
+          f" Test MAPE: {results[name]['test_mape']:.2f}%"
+          f" R²: {results[name]['test_r2']:.3f}")
 
-# ── ENSEMBLE ─────────────────────────────────────────────────────────────────
+# ---- ENSEMBLE -----------------------------------------
 class EnsembleModel:
     def __init__(self, models, weights):
         self.models  = models
@@ -99,18 +99,18 @@ class EnsembleModel:
 
 
 mape_scores = {n: results[n]['test_mape'] for n in models}
-inv_total   = sum(1 / s for s in mape_scores.values())
-weights     = {n: (1 / s) / inv_total for n, s in mape_scores.items()}
+inv_total = sum(1 / s for s in mape_scores.values())
+weights = {n: (1 / s) / inv_total for n, s in mape_scores.items()}
 
 ensemble = EnsembleModel(trained_models, weights)
-yte_ens  = ensemble.predict(X_test)
+yte_ens = ensemble.predict(X_test)
 ens_mape = mean_absolute_percentage_error(y_test, yte_ens) * 100
-ens_r2   = r2_score(y_test, yte_ens)
+ens_r2 = r2_score(y_test, yte_ens)
 
-print(f"\nEnsemble → Test MAPE: {ens_mape:.2f}% | R²: {ens_r2:.3f}")
+print(f"\nEnsemble = Test MAPE: {ens_mape:.2f}% | R²: {ens_r2:.3f}")
 
-# ── SELECT BEST ───────────────────────────────────────────────────────────────
-best      = min(results, key=lambda x: results[x]['test_mape'])
+# ---- SELECT BEST -----------------------------------------
+best = min(results, key=lambda x: results[x]['test_mape'])
 best_mape = results[best]['test_mape']
 
 if ens_mape < best_mape:
@@ -120,14 +120,14 @@ else:
 
 print(f"\nBest model: {final_name} (MAPE: {final_mape:.2f}%)")
 
-# ── SAVE ─────────────────────────────────────────────────────────────────────
-joblib.dump(ensemble,    os.path.join(DATA_DIR, 'ensemble_model_v3.pkl'))
+# ---- SAVE -----------------------------------------
+joblib.dump(ensemble, os.path.join(DATA_DIR, 'ensemble_model_v3.pkl'))
 joblib.dump(final_model, os.path.join(DATA_DIR, 'final_model_v3.pkl'))
 
 # Feature importance chart
 if 'XGBoost' in trained_models:
     fi = pd.DataFrame({
-        'feature':    FEATURE_COLS,
+        'feature': FEATURE_COLS,
         'importance': trained_models['XGBoost'].feature_importances_
     }).sort_values('importance', ascending=False)
     plt.figure(figsize=(12, 8))
@@ -143,9 +143,9 @@ if 'XGBoost' in trained_models:
 print("=" * 50)
 print("TRAINING COMPLETE")
 print(f"Saved to: {DATA_DIR}")
-print(f"  final_model_v3.pkl  ({final_name})")
-print(f"  ensemble_model_v3.pkl")
-print(f"  MAPE: {final_mape:.2f}%  "
-      f"{'✅ MEETS' if final_mape < 20 else '❌ DOES NOT MEET'} PRD target of <20%")
+print(f"final_model_v3.pkl  ({final_name})")
+print(f"ensemble_model_v3.pkl")
+print(f" MAPE: {final_mape:.2f}%"
+      f"{' MEETS' if final_mape < 20 else 'DOES NOT MEET'} PRD target of <20%")
 print("=" * 50)
 print("Next step: run api.py")

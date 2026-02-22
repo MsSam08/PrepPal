@@ -124,11 +124,11 @@ df.to_csv(output_file, index=False)
 print("="*80)
 print("RESTAURANT SALES DATASET GENERATED")
 print("="*80)
-print(f"✓ File: {output_file}")
-print(f"✓ Shape: {df.shape}")
-print(f"✓ Date range: {df['date'].min()} to {df['date'].max()}")
-print(f"✓ Business type: Restaurant")
-print(f"✓ Items: {len(items)}")
+print(f" File: {output_file}")
+print(f" Shape: {df.shape}")
+print(f" Date range: {df['date'].min()} to {df['date'].max()}")
+print(f" Business type: Restaurant")
+print(f" Items: {len(items)}")
 print(f"\nFirst 10 rows:")
 print(df.head(10))
 
@@ -148,9 +148,9 @@ required_cols = [
 ]
 for col in required_cols:
     if col in df.columns:
-        print(f"  ✓ {col}")
+        print(f"   {col}")
     else:
-        print(f"  ✗ {col} MISSING!")
+        print(f"   {col} MISSING!")
 
 print("\n" + "="*80)
 print("BUSINESS INSIGHTS")
@@ -165,4 +165,4 @@ print(f"Total waste quantity: {total_waste:,} items")
 print(f"Total waste value: ${waste_value:,.2f}")
 print(f"Average waste per day: {waste_value / days:.2f}")
 
-print("\n✓ RESTAURANT DATASET COMPLETE!")
+print("\n RESTAURANT DATASET COMPLETE!")

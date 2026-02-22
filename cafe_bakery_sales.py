@@ -183,12 +183,12 @@ df.to_csv(output_file, index=False)
 print("="*80)
 print("CAFÉ AND BAKERY SALES DATASET GENERATED")
 print("="*80)
-print(f"✓ File: {output_file}")
-print(f"✓ Shape: {df.shape}")
-print(f"✓ Date range: {df['date'].min()} to {df['date'].max()}")
-print(f"✓ Business types: Cafe, Bakery")
-print(f"✓ Café items: {len(cafe_items)}")
-print(f"✓ Bakery items: {len(bakery_items)}")
+print(f" File: {output_file}")
+print(f" Shape: {df.shape}")
+print(f" Date range: {df['date'].min()} to {df['date'].max()}")
+print(f" Business types: Cafe, Bakery")
+print(f" Café items: {len(cafe_items)}")
+print(f" Bakery items: {len(bakery_items)}")
 
 print("\n" + "="*80)
 print("SAMPLE DATA")
@@ -209,9 +209,9 @@ required_cols = [
 ]
 for col in required_cols:
     if col in df.columns:
-        print(f"  ✓ {col}")
+        print(f"   {col}")
     else:
-        print(f"  ✗ {col} MISSING!")
+        print(f"   {col} MISSING!")
 
 print("\n" + "="*80)
 print("BUSINESS TYPE BREAKDOWN")
@@ -234,4 +234,4 @@ for biz_type in ['Cafe', 'Bakery']:
     print(f"  Total waste quantity: {total_waste:,} items")
     print(f"  Total waste value: ${waste_value:,.2f}")
 
-print("\n✓ CAFÉ AND BAKERY DATASET COMPLETE!")
+print("\n CAFÉ AND BAKERY DATASET COMPLETE!")
