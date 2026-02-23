@@ -66,6 +66,9 @@ Predictions are accurate to within ±4 units on average, good enough to cut wast
 
 For questions or integration support, reach out to **euodiasam@gmail.com**.
 
-**Demo:** https://preppal-demo.streamlit.app  to be edited
+**Demo:** https://preppal-demo.streamlit.app 
 
 **API docs:** https://your-ngrok-url.ngrok.io/docs to be edited
+```
+http://192.168.1.181:8502
+```
