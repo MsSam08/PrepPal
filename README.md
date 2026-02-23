@@ -2,7 +2,7 @@
 
 > Helping SME food businesses reduce waste by up to 85% through AI-powered demand forecasting.
 
-**Built by the PrepPal Team · February 2026**
+**ML pipeline built by Euodia Sam · February 2026**
 
 ---
 
