@@ -79,6 +79,14 @@ uvicorn api:app --host 127.0.0.1 --port 8000
 
 Then visit `http://localhost:8000/docs` to explore the API.
 
+### Sharing with the Team (ngrok)
+To give teammates a public URL without deploying to the cloud:
+```
+# In a second terminal, while the API is running
+ngrok http 8000
+```
+ngrok will print a public HTTPS URL.
+
 ---
 
 ## Business Impact
