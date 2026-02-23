@@ -117,5 +117,5 @@ For a 5-item restaurant, that's roughly ₦496,000 net saved in the first year.
 
 For questions or integration support, reach out to **euodiasam@gmail.com**.
 
-**Demo:** https://preppal-demo.streamlit.app  
-**API docs:** https://your-ngrok-url.ngrok.io/docs
+**Demo:** https://preppal-demo.streamlit.app  to be edited
+**API docs:** https://your-ngrok-url.ngrok.io/docs to be edited
