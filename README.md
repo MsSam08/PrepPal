@@ -1,4 +1,4 @@
-# PrepPal — AI Food Waste Management
+# PrepPal - AI Food Waste Management
 
 > Helping SME food businesses reduce waste by up to 85% through AI-powered demand forecasting.
 
@@ -8,15 +8,15 @@
 
 ## What It Does
 
-Small food businesses — restaurants, cafés, bakeries — lose thousands every month to overproduction. They prep based on guesswork, and what doesn't sell gets thrown away.
+Small food businesses like restaurants, cafés, bakeries lose thousands every month to overproduction. They prep based on guesswork, and what doesn't sell gets thrown away.
 
-PrepPal fixes this with a demand forecasting model that predicts how much of each menu item a business will sell on any given day. It tells you what to make, how much to make, and flags when your plan puts you at risk of waste — before you start cooking.
+PrepPal fixes this with a demand forecasting model that predicts how much of each menu item a business will sell on any given day. It tells you what to make, how much to make, and flags when your plan puts you at risk of waste before you start cooking.
 
 - **Single-day predictions** with confidence scores
 - **7-day forecasts** so you can plan the week ahead
-- **Waste risk alerts** — red, yellow, or green based on your planned vs predicted quantities
+- **Waste risk alerts**  red, yellow, or green based on your planned vs predicted quantities
 - **Smart recommendations** with a 5% safety buffer built in
-- **Works for new menu items** — no prior sales history needed
+- **Works for new menu items** no prior sales history needed
 
 ---
 
@@ -30,7 +30,7 @@ The core model is XGBoost, trained on 180 days of sales data across restaurants,
 | R² Score | **0.916** | > 0.70 |
 | Prediction time | **< 1 second** | < 10 seconds |
 
-Predictions are accurate to within ±4 units on average — good enough to cut waste by 85% in pilot testing.
+Predictions are accurate to within ±4 units on average, good enough to cut waste by 85% in pilot testing.
 
 ---
 
@@ -66,7 +66,7 @@ Seven REST endpoints, documented interactively at `/docs`.
 ## Quick Start
 
 ```bash
-git clone https://github.com/yourusername/preppal-ml.git
+git clone https://github.com/MsSam08/PrepPal.git
 cd preppal-ml
 
 python -m venv .venv
@@ -74,7 +74,7 @@ source .venv/bin/activate        # Mac/Linux
 .\.venv\Scripts\Activate.ps1    # Windows
 
 pip install -r requirements.txt
-uvicorn api:app --reload --port 8000
+uvicorn api:app --host 127.0.0.1 --port 8000
 ```
 
 Then visit `http://localhost:8000/docs` to explore the API.
@@ -115,7 +115,7 @@ For a 5-item restaurant, that's roughly ₦496,000 net saved in the first year.
 
 ## Contact
 
-For questions or integration support, reach out to **euodia@preppal.com**.
+For questions or integration support, reach out to **euodiasam@gmail.com**.
 
 **Demo:** https://preppal-demo.streamlit.app  
 **API docs:** https://your-ngrok-url.ngrok.io/docs
