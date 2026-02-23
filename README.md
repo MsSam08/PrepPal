@@ -2,8 +2,8 @@
 
 > **Reducing food waste for SME food businesses by up to 85% through AI-powered demand forecasting.**
 
-**Author:** Euodia Sam — Data Science Lead  
-**Team Size:** 17 members | **Sprint Duration:** 3 weeks (February 2026)
+**Author:** Euodia Sam - Data Science Lead  
+**Sprint Duration:** 2 weeks (February 2026)
 
 ---
 
@@ -29,7 +29,7 @@
 
 ### The Problem
 
-Small and medium food businesses — restaurants, cafés, and bakeries — rely on guesswork when planning daily production. This leads to:
+Small and medium food businesses; restaurants, cafés, and bakeries rely on guesswork when planning daily production. This leads to:
 
 - **6–14% food waste** from consistent overproduction
 - **Lost revenue** from stockouts on high-demand days
@@ -47,7 +47,7 @@ PrepPal is an AI-powered demand forecasting system that gives food businesses th
 
 ### Key Result
 
-**Model MAPE: 8.32%** — 58% better than the 20% PRD target.
+**Model MAPE: 8.32%** - 58% better than the 20% PRD target.
 
 Predictions are accurate to within ±4 units on average, enabling **85% waste reduction** in pilot testing.
 
@@ -55,7 +55,7 @@ Predictions are accurate to within ±4 units on average, enabling **85% waste re
 
 ## Team & Roles
 
-I owned the full ML pipeline end-to-end — from exploratory data analysis through to the production API. Other team members own complementary parts of the product.
+I owned the full ML pipeline end-to-end from exploratory data analysis through to the production API. Other team members own complementary parts of the product.
 
 | Role | Name | Responsibility |
 |------|------|----------------|
@@ -122,8 +122,8 @@ The system is structured across four layers:
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/preppal-ml.git
-cd preppal-ml
+git clone https://github.com/MsSam08/PrepPal.git
+cd PrepPal
 
 # Create and activate a virtual environment
 python -m venv .venv
@@ -134,13 +134,13 @@ source .venv/bin/activate        # Mac/Linux
 pip install -r requirements.txt
 
 # Verify installation
-python -c "import xgboost, fastapi; print('All dependencies installed ✅')"
+python -c "import xgboost, fastapi; print('All dependencies installed')"
 ```
 
 ### Run the API
 
 ```bash
-uvicorn api:app --reload --host 0.0.0.0 --port 8000
+uvicorn api:app --host 0.0.0.0 --port 8000
 ```
 
 | URL | Purpose |
@@ -149,7 +149,7 @@ uvicorn api:app --reload --host 0.0.0.0 --port 8000
 | `http://localhost:8000/docs` | Interactive Swagger docs |
 | `http://localhost:8000/api/health` | Health check |
 
-### Your First Prediction
+### First Prediction
 
 ```bash
 curl -X POST "http://localhost:8000/api/predict" \
@@ -181,25 +181,25 @@ curl -X POST "http://localhost:8000/api/predict" \
 
 ## Implementation Journey
 
-### Phase 1 — Data Exploration (Days 1–2)
+### Phase 1: Data Exploration (Days 1–2)
 
 ```bash
 python eda_analysis.py
 ```
 
-**Dataset:** 2,700 rows (900 restaurant + 1,800 café/bakery) over 180 consecutive days (June–November 2025).
+**Dataset:** 2,700 rows (900 restaurant + 1,800 café/bakery) over 180 consecutive days (June-November 2025).
 
 **Key findings:**
 - No missing values or quality issues
-- Bakeries peak on weekends; cafés peak Monday–Friday
+- Bakeries peak on weekends; cafés peak Monday-Friday
 - Rainy weather reduces restaurant demand by ~15%
-- Recent demand (last 3–7 days) is the strongest single predictor
+- Recent demand (last 3-7 days) is the strongest single predictor
 
 **Outputs:** `eda_distributions.png`, `demand_timeseries.png`, `correlation_matrix.png`
 
 ---
 
-### Phase 2 — Data Validation (Day 2)
+### Phase 2: Data Validation (Day 2)
 
 ```bash
 python data_validation.py
@@ -209,19 +209,19 @@ Seven automated checks were run across both datasets:
 
 | Check | Result |
 |-------|--------|
-| Schema — all 11 columns present | ✅ Pass |
-| Date format (YYYY-MM-DD) parseable | ✅ Pass |
-| No negative quantities | ✅ Pass |
-| Sales ≤ min(demand, supply) | ✅ Pass |
-| No duplicate item–date pairs | ✅ Pass |
-| No gaps in 180-day series | ✅ Pass |
-| Valid categorical values | ✅ Pass |
+| Schema - all 11 columns present | Pass |
+| Date format (YYYY-MM-DD) parseable | Pass |
+| No negative quantities | Pass |
+| Sales ≤ min(demand, supply) | Pass |
+| No duplicate item-date pairs | Pass |
+| No gaps in 180-day series | Pass |
+| Valid categorical values | Pass |
 
 **Output:** `validation_report.md`
 
 ---
 
-### Phase 3 — Feature Engineering (Days 3–4)
+### Phase 3: Feature Engineering (Days 3-4)
 
 ```bash
 python 03_feature_engineering_FINAL.py
@@ -246,21 +246,21 @@ python 03_feature_engineering_FINAL.py
 
 ---
 
-### Phase 4 — Model Training (Days 5–7)
+### Phase 4: Model Training (Days 5-7)
 
 ```bash
 python model_training_and_ensemble.py
 ```
 
-**Split strategy:** Time-based (not random) — first 150 days for training, last 30 days for testing.
+**Split strategy:** Time-based (not random); first 150 days for training, last 30 days for testing.
 
 | Model | Test MAPE | R² | Train–Test Gap | Status |
 |-------|-----------|-----|----------------|--------|
 | Ridge (baseline) | 10.99% | 0.859 | 0.67% | Baseline |
 | Random Forest | 9.18% | 0.886 | 5.12% | Overfitting |
 | Gradient Boosting | 8.68% | 0.918 | 5.18% | Strong |
-| **XGBoost** | **8.32%** | **0.916** | **5.98%** | **✅ Selected** |
-| Ensemble | 8.51% | 0.913 | — | Good, but complex |
+| **XGBoost** | **8.32%** | **0.916** | **5.98%** | **Selected** |
+| Ensemble | 8.51% | 0.913 | - | Good, but complex |
 
 XGBoost was selected for lowest test MAPE, highest R², acceptable train–test gap, and simpler deployment than the ensemble.
 
@@ -283,7 +283,7 @@ is_sunday               2.1%
 
 ---
 
-### Phase 5 — 7-Day Forecasting (Day 8)
+### Phase 5: 7-Day Forecasting (Day 8)
 
 ```bash
 python forecasting.py
@@ -293,15 +293,15 @@ Confidence degrades naturally as predictions extend further from observed data:
 
 | Horizon | Confidence | Typical MAPE |
 |---------|-----------|--------------|
-| Day 1–2 | High (80–85%) | 7.1% |
-| Day 3–5 | Medium (65–75%) | 9.3% |
-| Day 6–7 | Low (55–60%) | 12.8% |
+| Day 1-2 | High (80-85%) | 7.1% |
+| Day 3-5 | Medium (65-75%) | 9.3% |
+| Day 6-7 | Low (55-60%) | 12.8% |
 
-New items with no sales history are handled gracefully — the model falls back to business-type averages and emits a warning rather than failing.
+New items with no sales history are handled gracefully, the model falls back to business-type averages and emits a warning rather than failing.
 
 ---
 
-### Phase 6 — API Development (Days 9–11)
+### Phase 6: API Development (Days 9-11)
 
 ```bash
 python api.py
@@ -314,13 +314,13 @@ Seven REST endpoints were built and documented. See [API Documentation](#api-doc
 | Metric | Achieved | Target |
 |--------|----------|--------|
 | Response time | < 1 second | < 10 seconds |
-| Uptime fallback | ✅ Implemented | Required |
-| Input validation | ✅ Pydantic | Required |
-| Interactive docs | ✅ Swagger at `/docs` | Nice-to-have |
+| Uptime fallback | Implemented | Required |
+| Input validation | Pydantic | Required |
+| Interactive docs | Swagger at `/docs` | Nice-to-have |
 
 ---
 
-### Phase 7 — Testing (Day 12)
+### Phase 7: Testing (Day 12)
 
 ```bash
 python 11_unit_tests.py -v
@@ -340,7 +340,7 @@ Total                  22/22  ✅  (3.45s)
 
 ---
 
-### Phase 8 — Deployment (Days 13–15)
+### Phase 8: Deployment (Days 13-15)
 
 The API was exposed to the team via ngrok for integration testing, and a Streamlit demo was deployed to Streamlit Cloud. Production deployment to Railway or Render is planned as the next step.
 
@@ -352,11 +352,11 @@ The API was exposed to the team via ngrok for integration testing, and a Streaml
 
 | Metric | Value | PRD Target | Status |
 |--------|-------|------------|--------|
-| Test MAPE | 8.32% | < 20% | ✅ 58% better |
-| R² Score | 0.916 | > 0.70 | ✅ 31% better |
-| MAE | ~4.3 units | < 10 units | ✅ Met |
-| Train–Test Gap | 5.98% | < 6% | ✅ Met |
-| Prediction Time | < 1 second | < 10 seconds | ✅ 10× faster |
+| Test MAPE | 8.32% | < 20% | 58% better |
+| R² Score | 0.916 | > 0.70 | 31% better |
+| MAE | ~4.3 units | < 10 units | Met |
+| Train–Test Gap | 5.98% | < 6% | Met |
+| Prediction Time | < 1 second | < 10 seconds | 10× faster |
 
 ### By Business Type
 
@@ -382,7 +382,7 @@ Returns API and model status.
 
 ---
 
-### `POST /api/predict` — Single-Day Prediction
+### `POST /api/predict` - Single-Day Prediction
 
 **Request:**
 ```json
@@ -411,7 +411,7 @@ Returns API and model status.
 
 ---
 
-### `POST /api/predict-week` — 7-Day Forecast
+### `POST /api/predict-week` - 7-Day Forecast
 
 Accepts the same item fields plus `starting_date`, `weather_forecast` (array of 7), and `holiday_flags` (array of 7).
 
@@ -419,7 +419,7 @@ Returns a 7-element forecast array with predicted demand, recommended quantity, 
 
 ---
 
-### `POST /api/risk-alert` — Waste Risk Assessment
+### `POST /api/risk-alert` - Waste Risk Assessment
 
 **Request:** `predicted_demand`, `planned_quantity`
 
@@ -429,26 +429,26 @@ Returns a 7-element forecast array with predicted demand, recommended quantity, 
   "risk_level": "HIGH",
   "waste_percentage": 30.0,
   "expected_waste": 18,
-  "message": "High waste risk — strongly recommend reducing quantity",
+  "message": "High waste risk - strongly recommend reducing quantity",
   "color": "red"
 }
 ```
 
 ---
 
-### `POST /api/recommend` — Smart Quantity Recommendation
+### `POST /api/recommend` - Smart Quantity Recommendation
 
 Returns an adjusted production quantity with a 5% safety buffer and a plain-English action description.
 
 ---
 
-### `POST /api/accuracy` — Model Performance Metrics
+### `POST /api/accuracy` - Model Performance Metrics
 
 Returns MAPE, MAE, and R² for a given item over the last N days.
 
 ---
 
-### `POST /api/retrain` — Trigger Retraining
+### `POST /api/retrain` - Trigger Retraining
 
 Starts a background retraining job using a provided data path. The model auto-retrains when MAPE exceeds 12%.
 
@@ -456,21 +456,21 @@ Starts a background retraining job using a provided data path. The model auto-re
 
 ## Deployment Guide
 
-### Option 1 — Local + ngrok (Current Setup)
+### Option 1: Local + ngrok (Current Setup)
 
-The API runs locally and is exposed to the team via a public ngrok tunnel — no cloud infrastructure required.
+The API runs locally and is exposed to the team via a public ngrok tunnel, no cloud infrastructure required.
 
 ```bash
 # Terminal 1: start the API
 export PREPPAL_DATA_DIR=$(pwd)   # Mac/Linux
 set PREPPAL_DATA_DIR=%cd%        # Windows
-uvicorn api:app --reload --port 8000
+uvicorn api:app --host 127.0.0.1 --port 8000
 
 # Terminal 2: open a public tunnel
 ngrok http 8000
 ```
 
-ngrok prints a public HTTPS URL (e.g. `https://abc123.ngrok.io`). Share this with the team:
+ngrok prints a public HTTPS URL (e.g. `https://abc123.ngrok.io`). Shared with the team:
 
 | Team member | Endpoint |
 |-------------|---------|
@@ -478,9 +478,9 @@ ngrok prints a public HTTPS URL (e.g. `https://abc123.ngrok.io`). Share this wit
 | Mobile (Christiana) | Test via Postman with the same base URL |
 | Product (Belinda) | Interactive docs at `https://abc123.ngrok.io/docs` |
 
-> **Note:** The ngrok URL changes each session unless you have a paid ngrok account with a reserved domain. Update the team when you restart.
+> **Note:** The ngrok URL changes each session unless with a paid ngrok account with a reserved domain. Update team every restart.
 
-### Option 2 — Railway.app (Planned)
+### Option 2: Railway.app (Planned)
 
 ```bash
 npm i -g @railway/cli
@@ -491,7 +491,7 @@ railway up
 railway domain
 ```
 
-### Option 3 — Render.com (Planned)
+### Option 3: Render.com (Planned)
 
 Create a `render.yaml` at the project root:
 
@@ -516,8 +516,8 @@ Push to GitHub, connect to Render, and auto-deploy activates on every push to `m
 ### Automated Tests
 
 ```bash
-python 11_unit_tests.py        # Run full suite
-python 11_unit_tests.py -v     # Verbose output
+python tests.py        # Run full suite
+python tests.py -v     # Verbose output
 ```
 
 ### Manual API Testing
@@ -534,7 +534,7 @@ curl -X POST http://localhost:8000/api/predict \
 
 ### Interactive Testing
 
-Navigate to `http://localhost:8000/docs` — click **Try it out** on any endpoint, enter parameters, and execute directly in the browser.
+Navigate to `http://localhost:8000/docs` - click **Try it out** on any endpoint, enter parameters, and execute directly in the browser.
 
 ---
 
@@ -718,7 +718,7 @@ URLSession.shared.dataTask(with: request) { data, _, _ in
 
 ## Acknowledgements
 
-Thanks to mentor **Bolatito Sarumi** for technical guidance and code reviews, and to all 17 PrepPal contributors for their work across design, mobile, backend, security, and DevOps.
+Thanks to mentor **Bolatito Sarumi** for the guidance, and to all PrepPal contributors for their work across design, mobile, backend, security, and DevOps.
 
 Libraries: [XGBoost](https://xgboost.readthedocs.io) · [FastAPI](https://fastapi.tiangolo.com) · [scikit-learn](https://scikit-learn.org) · [pandas](https://pandas.pydata.org)
 
