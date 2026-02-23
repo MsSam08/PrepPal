@@ -10,7 +10,7 @@
 > This URL is served via ngrok tunnelling to local port `8000`. If ngrok restarts, the URL changes. Update it in your backend service class, mobile app, and DevOps scripts when it does.
 
 **This document defines EXACT contracts between ML API and other systems. Following these specs prevents crashes.**
-> NOTE: It is meant to give a fair idea on how to integrate the model, not a replacement to your actual code
+> NOTE: It is meant to give a fair idea on how to integrate the model seamlessly, not a replacement to your actual code
 ---
 
 ## Table of Contents
