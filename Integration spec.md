@@ -5,7 +5,7 @@
 
 ## Critical Information
 
-**API Base URL:** `http://192.168.1.181:8502` (local) or `https://your-app.streamlit.app` (production)
+**API Base URL:** `http://192.168.1.181:8502` (ngrok public url)
 
 > This URL is served via ngrok tunnelling to local port `8000`. If ngrok restarts, the URL changes. Update it in your backend service class, mobile app, and DevOps scripts when it does.
 
