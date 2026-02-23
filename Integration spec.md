@@ -1,11 +1,13 @@
 # PrepPal ML API - Complete Integration Specification
-**Version:** 3.0  
+**Version:** 3.1  
 **Last Updated:** February 23, 2026  
 **API Owner:** Euodia Sam (Data Science Lead)
 
 ## Critical Information
 
-**API Base URL:** `http://192.168.1.181:8502` or `http://192.168.1.181:8501`
+**API Base URL:** `http://192.168.1.181:8502` (local) or `https://your-app.streamlit.app` (production)
+
+> This URL is served via ngrok tunnelling to local port `8000`. If ngrok restarts, the URL changes. Update it in your backend service class, mobile app, and DevOps scripts when it does.
 
 **This document defines EXACT contracts between ML API and other systems. Following these specs prevents crashes.**
 
@@ -33,28 +35,31 @@
 
 **Request:** None
 
-**Response (200 OK):**
+**Response (200 OK - Healthy):**
 ```json
 {
   "status": "healthy",
   "model_loaded": true,
-  "timestamp": "2026-02-23T10:30:00"
+  "model_error": null,
+  "timestamp": "2026-02-23T10:30:00",
+  "version": "3.0.0"
 }
 ```
 
-**Response (503 Degraded):**
+**Response (200 OK - Degraded):**
 ```json
 {
   "status": "degraded",
   "model_loaded": false,
   "model_error": "Error loading model file",
-  "timestamp": "2026-02-23T10:30:00"
+  "timestamp": "2026-02-23T10:30:00",
+  "version": "3.0.0"
 }
 ```
 
 **Backend Action:** If status != "healthy", use cached predictions or show maintenance message.
 
-**DevOps Action:** Alert if this endpoint returns non-200 or status != "healthy" for > 5 minutes.
+**DevOps Action:** Alert if status != "healthy" for > 5 minutes. Both responses return HTTP 200 -- check the status field, not the HTTP code.
 
 ---
 
@@ -104,18 +109,30 @@
 }
 ```
 
-**Fallback Response (200 OK - Model Unavailable):**
+**Fallback Response (200 OK - Cached forecast available):**
 ```json
 {
   "success": true,
   "fallback": true,
-  "fallback_reason": "AI model temporarily unavailable - showing last valid forecast",
+  "fallback_reason": "Model temporarily unavailable - showing last valid forecast",
   "predicted_demand": 42,
   "recommended_quantity": 44,
-  "confidence": "Medium",
-  "confidence_score": 0.70
+  "confidence": "High",
+  "confidence_score": 0.85
 }
 ```
+
+**Fallback Response (200 OK - No cache available):**
+```json
+{
+  "success": true,
+  "fallback": true,
+  "fallback_reason": "Model unavailable. Please use recent sales history as a guide.",
+  "predicted_demand": null
+}
+```
+
+**Note:** `recommended_quantity` is not returned when there is no cached forecast. Always check for its presence before accessing it.
 
 **Error Response (400 Bad Request):**
 ```json
@@ -141,9 +158,10 @@
 **Backend Requirements:**
 1. Validate input before sending (check business_type spelling)
 2. Handle both success and fallback responses (both have success: true)
-3. Store predictions in database with timestamp
-4. If API returns 500, use yesterday's forecast as backup
-5. Never show error to user, always have a fallback
+3. Do not assume recommended_quantity exists in fallback -- check for it first
+4. Store predictions in database with timestamp
+5. If API returns 500, use yesterday's forecast as backup
+6. Never show error to user, always have a fallback
 
 **Mobile Requirements:**
 1. Show loading indicator while waiting (response time: <2 seconds)
@@ -258,7 +276,7 @@
   "risk_level": "HIGH",
   "waste_percentage": 30.0,
   "expected_waste": 18,
-  "message": "High waste risk - strongly recommend reducing quantity",
+  "message": "High waste risk - reduce quantity.",
   "color": "red"
 }
 ```
@@ -270,7 +288,7 @@
   "risk_level": "MEDIUM",
   "waste_percentage": 8.5,
   "expected_waste": 4,
-  "message": "Moderate waste risk - consider reducing quantity",
+  "message": "Moderate waste risk - consider reducing.",
   "color": "yellow"
 }
 ```
@@ -282,7 +300,7 @@
   "risk_level": "LOW",
   "waste_percentage": 2.3,
   "expected_waste": 1,
-  "message": "Good planning - minimal waste expected",
+  "message": "Good planning - minimal waste expected.",
   "color": "green"
 }
 ```
@@ -292,6 +310,7 @@
 - HIGH: waste_percentage > 15%
 - MEDIUM: waste_percentage between 5% and 15%
 - LOW: waste_percentage < 5%
+- If planned_quantity = 0: returns LOW, waste_percentage = 0, message = "No production planned."
 
 **Backend Requirements:**
 1. Call this endpoint AFTER getting prediction
@@ -334,8 +353,8 @@
   "success": true,
   "recommended_quantity": 42,
   "action": "REDUCE by 13 units",
-  "reason": "Your current plan exceeds predicted demand - reducing avoids waste",
-  "explanation": "Predicted demand: 40 units. With 5% safety buffer → recommend 42 units."
+  "reason": "Current plan exceeds predicted demand - reducing avoids waste.",
+  "explanation": "Predicted demand: 40 units. With 5% safety buffer -> recommend 42 units."
 }
 ```
 
@@ -345,8 +364,8 @@
   "success": true,
   "recommended_quantity": 42,
   "action": "INCREASE by 7 units",
-  "reason": "Your current plan is below predicted demand - increasing avoids stockouts",
-  "explanation": "Predicted demand: 40 units. With 5% safety buffer → recommend 42 units."
+  "reason": "Current plan is below predicted demand - increasing avoids stockouts.",
+  "explanation": "Predicted demand: 40 units. With 5% safety buffer -> recommend 42 units."
 }
 ```
 
@@ -356,13 +375,13 @@
   "success": true,
   "recommended_quantity": 42,
   "action": "MAINTAIN current plan",
-  "reason": "Your current plan is within the optimal range",
-  "explanation": "Predicted demand: 40 units. With 5% safety buffer → recommend 42 units."
+  "reason": "Current plan is within the optimal range.",
+  "explanation": "Predicted demand: 40 units. With 5% safety buffer -> recommend 42 units."
 }
 ```
 
 **Recommendation Logic:**
-- recommended_quantity = predicted_demand * 1.05 (always includes 5% safety buffer)
+- recommended_quantity = round(predicted_demand * 1.05) (always includes 5% safety buffer)
 - difference = recommended_quantity - current_plan
 - if difference < -5: REDUCE
 - if difference > 5: INCREASE
@@ -375,7 +394,7 @@
 4. Auto-fill recommended_quantity in the input field (user can override)
 
 **Mobile Requirements:**
-1. Show action in bold with icon (↓ REDUCE, ↑ INCREASE, ✓ MAINTAIN)
+1. Show action in bold with icon (down REDUCE, up INCREASE, check MAINTAIN)
 2. Use colors: red for REDUCE, green for INCREASE, blue for MAINTAIN
 3. Display reason text below action
 4. Add "Auto-fill" button to set quantity to recommended_quantity
@@ -435,19 +454,26 @@
 ```json
 {
   "success": true,
-  "message": "No accuracy logs yet. Written by monitoring.py after daily sales.",
+  "message": "No accuracy logs yet. They are written by monitoring.py after daily sales.",
   "metrics": null
 }
 ```
 
+**Accuracy Thresholds:**
+
+| Flag | Triggers at | Action |
+|------|-------------|--------|
+| meets_target = false | avg_mape >= 20% | Alert and review |
+| degraded = true | avg_mape > 25% | Consider retraining |
+
 **Backend Requirements:**
 1. Call this endpoint weekly to check model health
 2. If degraded=true, notify admin
-3. If avg_mape > 25%, trigger retraining alert
+3. If meets_target=false (avg_mape >= 20%), trigger retraining alert
 4. Log metrics to analytics dashboard
 
 **DevOps Requirements:**
-1. Set up alert: if avg_mape > 20%, send Slack notification
+1. Set up alert on meets_target=false, not just degraded. The degraded flag only flips at 25%, not 20%
 2. Monitor trend: if MAPE increasing for 3 consecutive weeks, flag for review
 
 ---
@@ -475,7 +501,7 @@
 ```json
 {
   "success": true,
-  "message": "Retraining started in background. Check /api/health and /api/accuracy for updates.",
+  "message": "Retraining started. Check /api/health and /api/accuracy for updates.",
   "data_path": "/path/to/new_sales_data.csv"
 }
 ```
@@ -514,29 +540,21 @@ CREATE TABLE menu_items (
     id SERIAL PRIMARY KEY,
     business_id INT NOT NULL,
     item_name VARCHAR(100) NOT NULL,
-    category VARCHAR(20) NOT NULL,  -- NEW FIELD REQUIRED
     price DECIMAL(10,2) NOT NULL,
-    shelf_life_hours FLOAT NOT NULL,  -- NEW FIELD REQUIRED
-    preparation_complexity INT NOT NULL,  -- NEW FIELD REQUIRED (1-5)
+    shelf_life_hours FLOAT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (business_id) REFERENCES businesses(id)
 );
 ```
 
-**Valid category values:**
-- "main_meal"
-- "beverage"
-- "dessert"
-- "bakery"
-- "side_dish"
-- "pastry"
-- "light_meal"
+**Fields required by the ML API:**
 
-**Examples:**
-- Jollof Rice: category="main_meal", preparation_complexity=3, shelf_life_hours=4
-- Espresso: category="beverage", preparation_complexity=1, shelf_life_hours=0.5
-- White Bread: category="bakery", preparation_complexity=4, shelf_life_hours=24
-- Donuts: category="dessert", preparation_complexity=3, shelf_life_hours=12
+| Field | Notes |
+|-------|-------|
+| item_name | Case-sensitive -- store exactly as intended |
+| price | Positive decimal |
+| shelf_life_hours | Positive float e.g. 0.5, 4, 24 |
+| business_type | Stored at business level, not item level |
 
 ### Daily Forecast (Backend Database Schema)
 
@@ -588,8 +606,6 @@ Run these SQL scripts in order:
 
 ```sql
 -- Step 1: Add ML fields to menu_items
-ALTER TABLE menu_items ADD COLUMN category VARCHAR(20);
-ALTER TABLE menu_items ADD COLUMN preparation_complexity INT;
 ALTER TABLE menu_items ADD COLUMN shelf_life_hours FLOAT;
 
 -- Step 2: Create forecasts table
@@ -718,7 +734,7 @@ def generate_daily_forecasts(business_id: int):
                 item_id=item["id"],
                 forecast_date=tomorrow,
                 predicted_demand=prediction["predicted_demand"],
-                recommended_quantity=prediction["recommended_quantity"],
+                recommended_quantity=prediction.get("recommended_quantity"),
                 confidence=prediction["confidence"],
                 confidence_score=prediction["confidence_score"]
             )
@@ -878,10 +894,10 @@ class MLAPIService {
 struct Prediction: Codable {
     let success: Bool
     let fallback: Bool?
-    let predictedDemand: Int
-    let recommendedQuantity: Int
-    let confidence: String
-    let confidenceScore: Double
+    let predictedDemand: Int?
+    let recommendedQuantity: Int?
+    let confidence: String?
+    let confidenceScore: Double?
     let explanation: String?
     
     enum CodingKeys: String, CodingKey {
@@ -941,8 +957,8 @@ struct RiskAlert: Codable {
 ### 1. Health Monitoring (MUST SET UP)
 
 ```bash
-# Uptime check (runs every 5 minutes)
-*/5 * * * * curl -f http://192.168.1.181:8502/api/health || echo "ML API DOWN" | mail -s "Alert" ops@preppal.com
+# Uptime check (runs every 5 minutes) -- checks status field, not HTTP code
+*/5 * * * * curl -s http://192.168.1.181:8502/api/health | grep -q '"status": "healthy"' || echo "ML API DEGRADED" | mail -s "Alert" ops@preppal.com
 ```
 
 Or use monitoring service like:
@@ -953,12 +969,12 @@ Or use monitoring service like:
 ### 2. Alerts (MUST CONFIGURE)
 
 **Critical Alerts (Slack/Email immediately):**
-- ML API health check fails for > 5 minutes
+- ML API status != "healthy" for > 5 minutes
 - API returns 500 errors for > 10 consecutive requests
 - Average response time > 10 seconds
 
 **Warning Alerts (Daily digest):**
-- Model accuracy (avg_mape) > 20%
+- Model accuracy meets_target=false (avg_mape >= 20%)
 - Fallback responses > 10% of total requests
 - API response time > 3 seconds
 
@@ -1033,12 +1049,13 @@ All endpoints return errors in this format:
 
 ### Backend Testing
 
-- [ ] Health check returns 200
+- [ ] Health check returns 200 with status field -- check status field not HTTP code
 - [ ] Can get prediction for existing item
 - [ ] Can get prediction for NEW item (not in training data)
 - [ ] Prediction fails gracefully if API down
+- [ ] Fallback with no cache -- recommended_quantity is absent and handled correctly
 - [ ] 7-day forecast returns exactly 7 days
-- [ ] Risk alert shows red/yellow/green correctly
+- [ ] Risk alert shows red/yellow/green correctly with correct message strings
 - [ ] Recommendation gives REDUCE/INCREASE/MAINTAIN
 - [ ] Daily forecast cron job runs at 6 AM
 - [ ] Forecasts saved to database correctly
@@ -1051,6 +1068,7 @@ All endpoints return errors in this format:
 - [ ] Loading indicator shows while waiting
 - [ ] Confidence colors display correctly
 - [ ] Fallback message shows when fallback=true
+- [ ] App handles missing recommended_quantity in no-cache fallback gracefully
 - [ ] Network timeout handled gracefully
 - [ ] Risk alert colors (red/yellow/green) display
 - [ ] "Use Recommended" button fills quantity
@@ -1058,8 +1076,9 @@ All endpoints return errors in this format:
 
 ### DevOps Testing
 
-- [ ] Health check monitoring set up
-- [ ] Alerts trigger when API down
+- [ ] Health monitoring checks status field, not HTTP code
+- [ ] Alerts trigger when status != "healthy"
+- [ ] Accuracy alert fires when meets_target=false
 - [ ] Logs being collected
 - [ ] Backup system configured
 - [ ] Can restore from backup
@@ -1072,10 +1091,10 @@ All endpoints return errors in this format:
 **ML API Owner:** Euodia Sam (Data Science Lead)
 
 **For Integration Issues:**
-- Backend integration problems → Contact Euodia
-- API response format questions → Contact Euodia
-- Model accuracy concerns → Contact Euodia
-- Deployment issues → Contact DevOps + Euodia
+- Backend integration problems -> Contact Euodia
+- API response format questions -> Contact Euodia
+- Model accuracy concerns -> Contact Euodia
+- Deployment issues -> Contact DevOps + Euodia
 
 **API Base URL Updates:**
 Once deployed to production, update:
@@ -1088,5 +1107,5 @@ Once deployed to production, update:
 **End of Specification**
 
 Last Updated: February 23, 2026  
-Version: 3.0  
+Version: 3.1  
 Status: Production Ready
