@@ -55,7 +55,7 @@ Predictions are accurate to within ±4 units on average, enabling **85% waste re
 
 ## Team & Roles
 
-I owned the full ML pipeline end-to-end from exploratory data analysis through to the production API. Other team members own complementary parts of the product.
+The Data Science team owned the full ML pipeline end-to-end from exploratory data analysis through to the production API. Other team members own complementary parts of the product.
 
 | Role | Name | Responsibility |
 |------|------|----------------|
