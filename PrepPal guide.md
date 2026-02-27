@@ -66,7 +66,7 @@ The Data Science team owned the full ML pipeline end-to-end from exploratory dat
 | Product Lead | Belinda Mahachi | PRD, requirements, stakeholder management |
 | Design Lead | Mutiat Sanusi | UI/UX, user flows |
 | Cyber Security Lead | Margaret Macharia | Security audits, vulnerability testing |
-| Mentor | Bolatito Sarumi | Technical guidance|
+| Mentor | Bolatito Sarumi | Project guidance|
 
 ---
 
