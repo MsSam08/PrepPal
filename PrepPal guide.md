@@ -60,7 +60,7 @@ The Data Science team owned the full ML pipeline end-to-end from exploratory dat
 | Role | Name | Responsibility |
 |------|------|----------------|
 | **Data Science Lead** | Euodia Sam | ML pipeline, model training, API development, deployment |
-| Backend Lead | Queen Kuje | API integration, database, business logic |
+| Backend Lead | Queen Kuje & Precious Nwabueze | API integration, database, business logic |
 | Mobile App Lead | Christiana Kyebambo | iOS/Android client integration |
 | DevOps Lead | Precious Nwabueze | Cloud deployment, CI/CD, monitoring |
 | Product Lead | Belinda Mahachi | PRD, requirements, stakeholder management |
@@ -472,15 +472,12 @@ uvicorn api:app --host 127.0.0.1 --port 8000
 ngrok http 8000
 ```
 
-ngrok prints a public HTTPS URL (e.g. `https://abc123.ngrok.io`). Shared with the team:
+ngrok prints a public HTTPS URL (e.g. `https://.ngrok.io`):
+```
+http://192.168.1.181:8501
+```
 
-| Team member | Endpoint |
-|-------------|---------|
-| Backend (Queen) | `https://abc123.ngrok.io/api/predict` |
-| Mobile (Christiana) | Test via Postman with the same base URL |
-| Product (Belinda) | Interactive docs at `https://abc123.ngrok.io/docs` |
-
-> **Note:** The ngrok URL changes each session unless with a paid ngrok account with a reserved domain. Update team every restart.
+> **Note:** The ngrok URL changes each session unless with a paid ngrok account with a reserved domain.
 
 ### Option 2: Railway.app (Planned)
 
@@ -552,9 +549,9 @@ Navigate to `http://localhost:8000/docs` - click **Try it out** on any endpoint,
 | Actual demand | 42 units | 42 units |
 | Daily waste | 8 units | 2 units |
 | Weekly waste | 56 units | 14 units |
-| Weekly loss | ₦2,800 | ₦700 |
+| Weekly loss | GHS2,800 | GHS700 |
 
-**Result: 75% waste reduction · ₦2,100 saved per week per item**
+**Result: 75% waste reduction · GHS2,100 saved per week per item**
 
 ### ROI Projection (5-item restaurant)
 
@@ -713,9 +710,9 @@ URLSession.shared.dataTask(with: request) { data, _, _ in
 | Data Science Lead | Euodia Sam | euodiasam@gmail.com |
 
   
-**Live API:** https://api.preppal.com  (to be edited)
+**Live API:** https://api.preppal.com  (edited)
 
-**Demo:** https://preppal-demo.streamlit.app(to be edited)
+**Demo:** https://preppal-demo.streamlit.app(edited)
 
 ---
 
