@@ -1,7 +1,8 @@
 # PrepPal - AI Food Waste Management
 
 > Helping SME food businesses reduce waste by up to 85% through AI-powered demand forecasting.
-> This model is currently being integrated into a mobile app (Updates coming soon)
+
+> 🔴 This model is currently being integrated into a mobile app (Updates coming soon)
 
 A streamlined machine learning system for accurate food demand forecasting. Built specifically for restaurants, cafés, and bakeries, this system supports single-day predictions, 7-day forecasts, waste risk alerts, smart recommendations, and automatic retraining all within an efficient, production-ready API.
 
