@@ -256,3 +256,4 @@ PrepPal/
 
 - Email: euodiasam@gmail.com
 - GitHub: [@MsSam08](https://github.com/MsSam08)
+- Read: [article](https://medium.com/@euodiasam/how-ai-can-cut-food-waste-by-85-in-african-restaurants-a076ec852d5d)
