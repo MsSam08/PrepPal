@@ -12,7 +12,7 @@ Small food businesses like restaurants, cafés, bakeries lose thousands every mo
 
 PrepPal fixes this with a demand forecasting model that predicts how much of each menu item a business will sell on any given day. It tells you what to make, how much to make, and flags when your plan puts you at risk of waste before you start cooking.
 
-**[Live Demo](#) | [API Docs](http://localhost:8000/docs)**
+**[Live Demo](https://github.com/MsSam08/PrepPal/blob/main/PrepPal%20model%20in%20action.mp4) 
 
 ---
 
