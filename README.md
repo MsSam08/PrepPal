@@ -80,9 +80,13 @@ source .venv/bin/activate  # Mac/Linux | .\.venv\Scripts\Activate.ps1 (Windows)
 pip install -r requirements.txt
 ```
 
-Launch app:
+Launch API:
 ```bash
 uvicorn api:app --host 0.0.0.0 --port 8000
+```
+Run:
+```
+streamlit run dashboard.py
 ```
 
 Admin panel at `http://localhost:8000/docs`
