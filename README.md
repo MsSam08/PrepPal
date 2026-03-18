@@ -2,7 +2,7 @@
 
 > Helping SME food businesses reduce waste by up to 85% through AI-powered demand forecasting.
 
-A streamlined machine learning system for accurate food demand forecasting. Built specifically for restaurants, cafés, and bakeries, this system supports single-day predictions, 7-day forecasts, waste risk alerts, smart recommendations, and automatic retraining—all within an efficient, production-ready API.
+A streamlined machine learning system for accurate food demand forecasting. Built specifically for restaurants, cafés, and bakeries, this system supports single-day predictions, 7-day forecasts, waste risk alerts, smart recommendations, and automatic retraining all within an efficient, production-ready API.
 
 ---
 
