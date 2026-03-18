@@ -716,10 +716,6 @@ URLSession.shared.dataTask(with: request) { data, _, _ in
 
 ---
 
-## Acknowledgements
-
-Thanks to mentor **Bolatito Sarumi** for the guidance, and to all PrepPal contributors for their work across design, mobile, backend, security, and DevOps.
-
 Libraries: [XGBoost](https://xgboost.readthedocs.io) · [FastAPI](https://fastapi.tiangolo.com) · [scikit-learn](https://scikit-learn.org) · [pandas](https://pandas.pydata.org)
 
 ---
